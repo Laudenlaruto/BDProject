@@ -26,7 +26,7 @@ public class Main {
 	    ResultSet rset = stmt.executeQuery ("select NBCARTECREDIT from BDUSER");
 	    while (rset.next ())
 	      System.out.println (rset.getString (1));
-	    //"ok"
+	    //"ok"qzildqsilmcvjfjsomfcjomf
 	}
 
 }
