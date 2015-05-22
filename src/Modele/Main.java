@@ -28,7 +28,7 @@ public class Main {
 	      System.out.println (rset.getString (1));
 
 	    
-	    //okokokok
+	    //okokokoknonononono
 
 	}
 
