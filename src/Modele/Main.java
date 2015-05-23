@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Main {
-
+/*
 	public static void main(String[] args)  throws SQLException, ClassNotFoundException {
 		// Chargement du driver JDBC Oracle
 	    // Utiliser une des deux méthodes suivante. Ici, ,la 2ème est utilisée
@@ -31,5 +31,5 @@ public class Main {
 	    //okokokoknonononono
 
 	}
-
+*/
 }

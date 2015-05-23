@@ -5,7 +5,7 @@ public class FenetreMere extends JFrame
 {
 	public static void main(String[] args)
 	{
-		new FenetreMere("Calendrier");
+		new FenetreMere("Site d'achat");
 	}
 	
 	public FenetreMere(String parTitre)
