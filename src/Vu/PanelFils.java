@@ -9,12 +9,19 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 
 public class PanelFils extends JPanel implements ActionListener
 {
 	//Déclaration 
 	//-----------------
+	//Tableaux (valeurs pour table)
+	String[] titre = {"NomProd","Qte","PrixU","PrixTot"}; //Valeurs du tableau
+	Object[][] exemple = {{"Chèvre","4000","1","4000"}}; //Exemple de valeur
+	//Table
+	JTable table = new JTable(exemple,titre);
 	//Label
 	JLabel labelLogin = new JLabel ("Login     :");
 	JLabel labelMDP = new JLabel ("Mdp        :");
@@ -24,7 +31,7 @@ public class PanelFils extends JPanel implements ActionListener
 	JTextField fieldLogin = new JTextField(8);
 	JTextField fieldMDP = new JTextField(8);
 	JTextField fieldCB = new JTextField(10);
-	JTextField fieldQte = new JTextField("Qte");
+	JTextField fieldQte = new JTextField("   Qte   ");
 	//Boutons
 	JButton boutonPrec = new JButton("<");
 	JButton boutonSuiv = new JButton(">");
@@ -32,7 +39,7 @@ public class PanelFils extends JPanel implements ActionListener
 	JButton boutonRem = new JButton("Del");
 	JButton boutonCo = new JButton("  Connexion  ");
 	JButton boutonRefresh = new JButton("Refresh");
-	JButton boutonPayer = new JButton("Payez !");
+	JButton boutonPayer = new JButton("  Payez !  ");
 	public PanelFils()
 	{
 		//GridBagLayout
@@ -56,16 +63,22 @@ public class PanelFils extends JPanel implements ActionListener
 		add(boutonRefresh,cont);
 		cont.gridy=0;
 		cont.gridx=6;
+		cont.fill = GridBagConstraints.VERTICAL;
 		add(boutonPrec,cont);
 		cont.gridx=7;
+		cont.fill = GridBagConstraints.BOTH;
 		add(labelArticle,cont);
+		cont.fill = GridBagConstraints.VERTICAL;
 		cont.gridx=8;
 		add(boutonSuiv,cont);
+		cont.fill = GridBagConstraints.BOTH;
 		cont.gridy=1;
 		add(boutonRem,cont);
 		cont.gridx=7;
+		cont.fill = GridBagConstraints.VERTICAL;
 		add(fieldQte,cont);
 		cont.gridx=6;
+		cont.fill = GridBagConstraints.BOTH;
 		add(boutonAdd,cont);
 		cont.gridx=3;
 		cont.gridy=0;
@@ -75,12 +88,22 @@ public class PanelFils extends JPanel implements ActionListener
 		add(fieldCB,cont);
 		cont.gridx=3;
 		cont.gridy=1;
+		cont.fill = GridBagConstraints.VERTICAL;
 		add(boutonPayer,cont);
+		cont.fill = GridBagConstraints.BOTH;
+		cont.gridheight = 3;
+		cont.gridwidth=5;
+		cont.gridx=0;
+		cont.gridy=3;
+		add(new JScrollPane(table),cont);
+		
+		
 	} //PanelFils()
 
 	public void actionPerformed(ActionEvent parEvt) 
 	{
 	
+		
 		
 	} //actionPerformed
 }
