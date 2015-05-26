@@ -1,17 +1,22 @@
 package Vu;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import Modele.SQL;
 
 public class PanelFils extends JPanel implements ActionListener
 {
@@ -31,7 +36,9 @@ public class PanelFils extends JPanel implements ActionListener
 	JTextField fieldLogin = new JTextField(8);
 	JTextField fieldMDP = new JTextField(8);
 	JTextField fieldCB = new JTextField(10);
-	JTextField fieldQte = new JTextField("   Qte   ");
+	JTextField fieldQte = new JTextField("Qte",3);
+	//JtextArea
+	JTextArea fieldHisto = new JTextArea();
 	//Boutons
 	JButton boutonPrec = new JButton("<");
 	JButton boutonSuiv = new JButton(">");
@@ -40,8 +47,16 @@ public class PanelFils extends JPanel implements ActionListener
 	JButton boutonCo = new JButton("  Connexion  ");
 	JButton boutonRefresh = new JButton("Refresh");
 	JButton boutonPayer = new JButton("  Payez !  ");
-	public PanelFils()
+	//SQL
+	SQL serveurLocal;
+	//String
+	String chLog;
+	String chMdp;
+	//Bool
+	boolean chCo = false;
+	public PanelFils(SQL parServeur)
 	{
+		serveurLocal = parServeur;
 		//GridBagLayout
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints cont = new GridBagConstraints(); //cont = contrainte
@@ -103,14 +118,61 @@ public class PanelFils extends JPanel implements ActionListener
 		cont.gridx=0;
 		cont.gridy=3;
 		add(new JScrollPane(table),cont);
+		cont.gridx=5;
+		cont.gridy=2;
+		cont.gridwidth =0;
+		cont.gridheight =0;
+		add(fieldHisto,cont);
+		fieldHisto.setEditable(false);
 		
 		
 	} //PanelFils()
 
 	public void actionPerformed(ActionEvent parEvt) 
 	{
-	
+		if (parEvt.getSource() == boutonCo)
+		{
+			String log = fieldLogin.getText();
+			String mdp = fieldMDP.getText();
+
+				 try {
+					if (serveurLocal.connection(log,mdp)){
+						 boutonCo.setBackground(new Color(0,255,255));
+						 fieldLogin.setEditable(false);
+						 fieldMDP.setEditable(false);
+						 chCo= true;
+						 chLog = log;
+						 chMdp = mdp;
+						 fieldHisto.append("Connection validée \n");
+					 }
+					 else
+					 {
+						 fieldHisto.append("Connection refusée \n");
+					 }
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+		}
 		
+		if(parEvt.getSource() == boutonPayer && chCo == true)
+		{
+			String codeCB = fieldCB.getText();
+			try {
+				if (serveurLocal.verifCB(codeCB, chLog))
+				{
+					fieldHisto.append("Vous avez perdu des sous, lol \n");
+					//	TODO ajouter textArea à droite pour message
+					//showMessageDialog("Merci pour votre achat");
+				}
+				else
+					fieldHisto.append("Pk tu vole des cb ?\n");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
 	} //actionPerformed
 }
