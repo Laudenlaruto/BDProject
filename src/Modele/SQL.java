@@ -18,17 +18,17 @@ public class SQL {
 	}
 	 
 	public boolean connection(String chLog,String chMdp) throws SQLException {
-		Statement stmt = connLocal.createStatement ();
-	    ResultSet rset2 = stmt.executeQuery ("select LOGIN from BDUSER where LOGIN = "+ "'" +  chLog + "'"  );
-	    rset2.next ();
-	    if (rset2.getBoolean(0)){
+			Statement stmt = connLocal.createStatement ();
+			
 	    	ResultSet rset = stmt.executeQuery ("select MDP from BDUSER where LOGIN = "+ "'" +  chLog + "'"  );
-	    	rset.next ();
-	    	if (chMdp.equalsIgnoreCase(rset.getString(1))){
+	    	if (rset.next ()){
+	    			if (chMdp.equalsIgnoreCase(rset.getString(1))){
 	    	return true;
-	    }
-	    }
-		return false;
+	    			}
+	    	}
+    		return false;
+	    	
+	    		
 	}
 	
 	public boolean verifCB (String codeCB, String chLog) throws SQLException
