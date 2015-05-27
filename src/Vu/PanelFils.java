@@ -58,6 +58,7 @@ public class PanelFils extends JPanel implements ActionListener
 	boolean chCo = false;
 	//int
 	int index = 0;
+	int idPanierCo;
 	//Panier
 	public PanelFils(SQL parServeur) throws SQLException
 	{
@@ -158,6 +159,9 @@ public class PanelFils extends JPanel implements ActionListener
 							 chLog = log;
 							 chMdp = mdp;
 							 fieldHisto.append("Connection validée \n");
+							 fieldHisto.append("Chargment du pannier \n");
+							 idPanierCo = serveurLocal.idPanier(log,mdp);
+							 // TODO afficher le panier
 						 }
 						 else
 						 {
@@ -205,8 +209,15 @@ public class PanelFils extends JPanel implements ActionListener
 			}
 		
 		}
-		if (parEvt.getSource()== boutonAdd){
-			
+		if (parEvt.getSource()== boutonAdd && chCo == true){
+			try {
+				serveurLocal.ajoutPanier(labelArticle.getText(),Integer.valueOf(fieldQte.getText()),idPanierCo);
+				
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-	} //actionPerformed
+	} //actionPerformed 
 }

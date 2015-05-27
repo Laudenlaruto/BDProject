@@ -59,6 +59,30 @@ public class SQL {
 		}
 		return listProduit;
 	}
+	public void ajoutPanier(String parNomProd,Integer chQte, int paridPanierCo) throws SQLException{
+		int Prix;
+		int idProduitR;
+		Statement stmt = connLocal.createStatement ();
+		ResultSet rset = stmt.executeQuery ("select prix from BDPRODUIT where NOMPROD = '" +parNomProd+"'");
+		rset.next();Prix = rset.getInt(1);
+		ResultSet rset3 = stmt.executeQuery ("select IDPRODUIT from BDPRODUIT where NOMPROD = '" +parNomProd+"'");
+		rset3.next();idProduitR = rset3.getInt(1);
+		System.out.println("insert into BDPANIER values("+paridPanierCo+","+chQte+","+ Prix + ","+idProduitR+"," + (Prix*chQte.intValue())+")");
+		ResultSet rset2 = stmt.executeQuery ("insert into BDPANIER values("+paridPanierCo+","+chQte+","+ Prix + ","+idProduitR+"," + (Prix*chQte.intValue())+")" );
+	}
+
+	public int idPanier(String chLog, String chmdp) {
+    	try {
+    		Statement stmt = connLocal.createStatement ();
+			ResultSet rset = stmt.executeQuery ("select IDPANIER from BDUSER where LOGIN = "+ "'" +  chLog + "'" +"and MDP = "+ "'"+chmdp+"'");
+			rset.next();
+			return rset.getInt(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;	
+	}
 	 
 
 	    

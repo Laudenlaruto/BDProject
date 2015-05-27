@@ -25,7 +25,6 @@ public class FenetreMere extends JFrame
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
-			System.out.println("Tell me");
 			e.printStackTrace();
 		}
 		
