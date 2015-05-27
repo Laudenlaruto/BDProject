@@ -58,16 +58,17 @@ public class PanelFils extends JPanel implements ActionListener
 	boolean chCo = false;
 	//int
 	int index = 0;
-	int idPanierCo;
+	int idPanierCo =0;
 	//Panier
+	Panier panier = new Panier(titre,idPanierCo);
 	public PanelFils(SQL parServeur) throws SQLException
 	{
 		
 		serveurLocal = parServeur;
 		//chTable.setModel(new TableDuMois(agenda,indexEvt));
-		Panier panier = new Panier(titre);
+		
 		chTable.setModel(panier);
-		//chTable.setColumnIdentifiers(titre);
+		
 		listProduit = serveurLocal.addproduit();
 		//GridBagLayout
 		this.setLayout(new GridBagLayout());
@@ -161,6 +162,7 @@ public class PanelFils extends JPanel implements ActionListener
 							 fieldHisto.append("Connection validée \n");
 							 fieldHisto.append("Chargment du pannier \n");
 							 idPanierCo = serveurLocal.idPanier(log,mdp);
+							 chTable.setModel(new Panier(titre, idPanierCo));
 							 // TODO afficher le panier
 						 }
 						 else
@@ -212,12 +214,13 @@ public class PanelFils extends JPanel implements ActionListener
 		if (parEvt.getSource()== boutonAdd && chCo == true){
 			try {
 				serveurLocal.ajoutPanier(labelArticle.getText(),Integer.valueOf(fieldQte.getText()),idPanierCo);
-				
+				//panier.setModele(idPanierCo,titre);
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
+		
 	} //actionPerformed 
 }

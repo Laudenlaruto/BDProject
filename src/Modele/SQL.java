@@ -17,7 +17,7 @@ public class SQL {
 	    Connection conn = DriverManager.getConnection ("jdbc:oracle:thin:@setna:1521:info", "bsanvois", "azerty");
 	    connLocal = conn;
 	    Statement stmt = connLocal.createStatement ();
-		ResultSet rset = stmt.executeQuery ("select NOMPROD from BDPRODUIT" );
+		ResultSet rset = stmt.executeQuery ("select NOMARTICLE from BDARTICLE" );
 		while(rset.next()){
 			NBArticle++;
 		}
@@ -50,7 +50,7 @@ public class SQL {
 
 	public String[] addproduit() throws SQLException {
 		Statement stmt = connLocal.createStatement ();
-		ResultSet rset = stmt.executeQuery ("select NOMPROD from BDPRODUIT" );
+		ResultSet rset = stmt.executeQuery ("select NOMARTICLE from BDARTICLE" );
 		int i =0;
 		String[] listProduit = new String[NBArticle];
 		while(rset.next()){
@@ -63,12 +63,11 @@ public class SQL {
 		int Prix;
 		int idProduitR;
 		Statement stmt = connLocal.createStatement ();
-		ResultSet rset = stmt.executeQuery ("select prix from BDPRODUIT where NOMPROD = '" +parNomProd+"'");
+		ResultSet rset = stmt.executeQuery ("select PRIXU from BDARTICLE where NOMARTICLE = '" +parNomProd+"'");
 		rset.next();Prix = rset.getInt(1);
-		ResultSet rset3 = stmt.executeQuery ("select IDPRODUIT from BDPRODUIT where NOMPROD = '" +parNomProd+"'");
+		ResultSet rset3 = stmt.executeQuery ("select IDARTICLE from BDARTICLE where NOMARTICLE = '" +parNomProd+"'");
 		rset3.next();idProduitR = rset3.getInt(1);
-		System.out.println("insert into BDPANIER values("+paridPanierCo+","+chQte+","+ Prix + ","+idProduitR+"," + (Prix*chQte.intValue())+")");
-		ResultSet rset2 = stmt.executeQuery ("insert into BDPANIER values("+paridPanierCo+","+chQte+","+ Prix + ","+idProduitR+"," + (Prix*chQte.intValue())+")" );
+		ResultSet rset2 = stmt.executeQuery ("insert into BDPANIER values("+paridPanierCo+","+idProduitR+","+chQte+"," + (Prix*chQte.intValue())+")" );
 	}
 
 	public int idPanier(String chLog, String chmdp) {
