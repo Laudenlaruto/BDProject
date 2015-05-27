@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import Modele.SQL;
 
@@ -24,14 +25,14 @@ public class PanelFils extends JPanel implements ActionListener
 	//-----------------
 	//Tableaux (valeurs pour table)
 	String[] titre = {"NomProd","Qte","PrixU","PrixTot"}; //Valeurs du tableau
-	Object[][] exemple = {{"Chèvre","4000","1","4000"}}; //Exemple de valeur
+	//Object[][] exemple = {{"Chèvre","4000","1","4000"}}; //Exemple de valeur
 	//Table
-	JTable table = new JTable(exemple,titre);
-	//Label
+	JTable chTable = new JTable();	//Label
+	//JLabel
 	JLabel labelLogin = new JLabel ("Login     :");
 	JLabel labelMDP = new JLabel ("Mdp        :");
 	JLabel labelCB = new JLabel ("Carte Bleu :");
-	JLabel labelArticle = new JLabel(" Article à defiler"); //label à setText selon BD
+	JLabel labelArticle = new JLabel(); //label à setText selon BD
 	//TextField
 	JTextField fieldLogin = new JTextField(8);
 	JTextField fieldMDP = new JTextField(8);
@@ -52,11 +53,21 @@ public class PanelFils extends JPanel implements ActionListener
 	//String
 	String chLog;
 	String chMdp;
+	String[] listProduit;
 	//Bool
 	boolean chCo = false;
-	public PanelFils(SQL parServeur)
+	//int
+	int index = 0;
+	//Panier
+	public PanelFils(SQL parServeur) throws SQLException
 	{
+		
 		serveurLocal = parServeur;
+		//chTable.setModel(new TableDuMois(agenda,indexEvt));
+		Panier panier = new Panier(titre);
+		chTable.setModel(panier);
+		//chTable.setColumnIdentifiers(titre);
+		listProduit = serveurLocal.addproduit();
 		//GridBagLayout
 		this.setLayout(new GridBagLayout());
 		GridBagConstraints cont = new GridBagConstraints(); //cont = contrainte
@@ -86,6 +97,7 @@ public class PanelFils extends JPanel implements ActionListener
 		cont.gridx=7;
 		cont.fill = GridBagConstraints.BOTH;
 		add(labelArticle,cont);
+		labelArticle.setText(listProduit[index]);
 		cont.fill = GridBagConstraints.VERTICAL;
 		cont.gridx=8;
 		add(boutonSuiv,cont);
@@ -117,7 +129,8 @@ public class PanelFils extends JPanel implements ActionListener
 		cont.gridwidth=5;
 		cont.gridx=0;
 		cont.gridy=3;
-		add(new JScrollPane(table),cont);
+		
+		add(new JScrollPane(chTable),cont);
 		cont.gridx=5;
 		cont.gridy=2;
 		cont.gridwidth =0;
@@ -130,49 +143,70 @@ public class PanelFils extends JPanel implements ActionListener
 
 	public void actionPerformed(ActionEvent parEvt) 
 	{
-		if (parEvt.getSource() == boutonCo)
+		if (parEvt.getSource() == boutonCo) //Connection
 		{
 			String log = fieldLogin.getText();
 			String mdp = fieldMDP.getText();
 
-				 try {
-					if (serveurLocal.connection(log,mdp)){
-						 boutonCo.setBackground(new Color(0,255,255));
-						 fieldLogin.setEditable(false);
-						 fieldMDP.setEditable(false);
-						 chCo= true;
-						 chLog = log;
-						 chMdp = mdp;
-						 fieldHisto.append("Connection validée \n");
-					 }
-					 else
-					 {
-						 fieldHisto.append("Connection refusée \n");
-					 }
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			
+				
+					try {
+						if (serveurLocal.connection(log,mdp)){
+							 boutonCo.setBackground(new Color(0,255,255));
+							 fieldLogin.setEditable(false);
+							 fieldMDP.setEditable(false);
+							 chCo= true;
+							 chLog = log;
+							 chMdp = mdp;
+							 fieldHisto.append("Connection validée \n");
+						 }
+						 else
+						 {
+							 fieldHisto.append("Connection refusée \n");
+						 }
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				
 		}
 		
-		if(parEvt.getSource() == boutonPayer && chCo == true)
+		if(parEvt.getSource() == boutonPayer && chCo == true) // Payer
 		{
 			String codeCB = fieldCB.getText();
 			try {
 				if (serveurLocal.verifCB(codeCB, chLog))
 				{
-					fieldHisto.append("Vous avez perdu des sous, lol \n");
-					//	TODO ajouter textArea à droite pour message
-					//showMessageDialog("Merci pour votre achat");
+					fieldHisto.append("Payement Validé \n");
 				}
 				else
-					fieldHisto.append("Pk tu vole des cb ?\n");
+					fieldHisto.append("Code carte bancaire erroné\n");
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		if(parEvt.getSource() == boutonSuiv){
+			if (index == listProduit.length-1){
+				index=0;
+				labelArticle.setText(listProduit[index]);
+			}
+			else{
+				index++;
+				labelArticle.setText(listProduit[index]);
+			}
+		}
+		if(parEvt.getSource() == boutonPrec){
+			if (index == 0){
+				index=listProduit.length-1;
+				labelArticle.setText(listProduit[index]);
+			}
+			else{
+				index--;
+				labelArticle.setText(listProduit[index]);
+			}
 		
+		}
+		if (parEvt.getSource()== boutonAdd){
+			
+		}
 	} //actionPerformed
 }
