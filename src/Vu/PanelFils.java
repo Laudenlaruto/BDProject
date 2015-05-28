@@ -31,13 +31,12 @@ public class PanelFils extends JPanel implements ActionListener
 	JTable chTable = new JTable();	//Label
 	//JLabel
 	JLabel labelMontantTot = new JLabel("Montant total :");
-	JLabel labelMontantVal = new JLabel("0");
+	JLabel labelMontantVal = new JLabel("0 €");
 	JLabel labelLogin = new JLabel ("Login     :");
 	JLabel labelMDP = new JLabel ("Mdp        :");
 	JLabel labelCB = new JLabel ("Carte Bleu :");
 	JLabel labelSolde = new JLabel("Votre solde :");
 	JLabel labelSoldeMontant = new JLabel("0 €");
-	//JLabel labelArticle = new JLabel(); //label à setText selon BD
 	//ComboBox
 	JComboBox comboArticle;
 	//TextField
@@ -48,8 +47,6 @@ public class PanelFils extends JPanel implements ActionListener
 	//JtextArea
 	JTextArea fieldHisto = new JTextArea();
 	//Boutons
-	//JButton boutonPrec = new JButton("<");
-	//JButton boutonSuiv = new JButton(">");
 	JButton boutonAdd = new JButton("Add");
 	JButton boutonRem = new JButton("Del");
 	JButton boutonCo = new JButton("  Connexion  ");
@@ -100,18 +97,15 @@ public class PanelFils extends JPanel implements ActionListener
 		cont.gridy=0;
 		cont.gridx=6;
 		cont.fill = GridBagConstraints.VERTICAL;
-		//add(boutonPrec,cont);
-		//boutonPrec.addActionListener(this);
+
 		cont.gridx=6;
 		cont.fill = GridBagConstraints.BOTH;
 		comboArticle = new JComboBox(listProduit);
 		add(comboArticle,cont);
-		//comboArticle.se(listProduit[index]);
 		
 		cont.fill = GridBagConstraints.VERTICAL;
 		cont.gridx=8;
-		//add(boutonSuiv,cont);
-		//boutonSuiv.addActionListener(this);
+;
 		cont.fill = GridBagConstraints.BOTH;
 		cont.gridy=1;
 		add(boutonRem,cont);
@@ -150,10 +144,16 @@ public class PanelFils extends JPanel implements ActionListener
 		add(new JScrollPane(chTable),cont);
 		cont.gridx=5;
 		cont.gridy=2;
-		cont.gridwidth =0;
-		cont.gridheight =0;
+		cont.gridwidth=0;
+		cont.gridheight=0;
 		add(fieldHisto,cont);
 		fieldHisto.setEditable(false);
+		cont.gridx=3;
+		cont.gridy=6;
+		add(labelMontantTot,cont);
+		cont.gridx=4;
+		add(labelMontantVal,cont);
+		
 		
 		
 	} //PanelFils()
@@ -207,27 +207,7 @@ public class PanelFils extends JPanel implements ActionListener
 				e.printStackTrace();
 			}
 		}
-		/*if(parEvt.getSource() == boutonSuiv){
-			if (index == listProduit.length-1){
-				index=0;
-				labelArticle.setText(listProduit[index]);
-			}
-			else{
-				index++;
-				labelArticle.setText(listProduit[index]);
-			}
-		}
-		if(parEvt.getSource() == boutonPrec){
-			if (index == 0){
-				index=listProduit.length-1;
-				labelArticle.setText(listProduit[index]);
-			}
-			else{
-				index--;
-				labelArticle.setText(listProduit[index]);
-			}
-		}
-		*/
+		
 		
 		if (parEvt.getSource()== boutonAdd && chCo == true){
 			try {
