@@ -20,23 +20,17 @@ public static Connection connLocal;
 	    Connection conn = DriverManager.getConnection ("jdbc:oracle:thin:@setna:1521:info", "bsanvois", "azerty");
 	    connLocal = conn;
 	    Statement stmt = connLocal.createStatement ();
-	    
+	    setColumnCount(4);
+		setRowCount(10);
 	    if (idPanierCo !=0){
-		ResultSet rset = stmt.executeQuery ("select IDARTICLE,QTE,SUMARTICLE from BDPANIER where IDPANIER ='"+idPanierCo+"'" );
-		int Ligne =1;
+		ResultSet rset = stmt.executeQuery ("select NOMARTICLE,QTE,SUMARTICLE,PRIXU from BDPANIER,BDARTICLE where BDPANIER.IDARTICLE = BDARTICLE.IDARTICLE and IDPANIER ='"+idPanierCo+"'" );
+		int Ligne =0;
 		while (rset.next()){
-			int IdArticle = rset.getInt(1);
-			Integer idAr = new Integer(IdArticle);
-			ResultSet rset2 = stmt.executeQuery ("select NOMARTICLE from BDARTICLE where IDARTICLE='"+IdArticle+"'");
-			// TODO joindre la resultatset rset et rset2
-			rset2.next();
-			setValueAt(rset2.getObject(1), 0, Ligne);//Nom article
-			setValueAt(rset.getObject(2),1,Ligne);// QTE
-			
-			ResultSet rset3 = stmt.executeQuery ("select PRIXU from BDARTICLE where IDARTICLE='"+IdArticle+"'");
-			rset3.next();
-			setValueAt(rset3.getObject(1), 3, Ligne);
-			setValueAt(rset.getObject(4), 2, Ligne);//Sum Total
+			setValueAt(rset.getObject(1),Ligne, 0);//Nom article
+			setValueAt(rset.getObject(2),Ligne,1);// QTE
+			setValueAt(rset.getObject(3), Ligne, 3);//Sum Total
+			setValueAt(rset.getObject(4), Ligne, 2);//prix unitaire
+			Ligne++;
 		}
 		}
 		

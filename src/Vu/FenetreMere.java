@@ -22,6 +22,7 @@ public class FenetreMere extends JFrame
 			setContentPane(contentPane);
 			setSize(1000,700);
 			setVisible(true); setLocation(200,0);
+			//this.pack();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
