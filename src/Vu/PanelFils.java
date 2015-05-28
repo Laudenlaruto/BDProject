@@ -30,12 +30,12 @@ public class PanelFils extends JPanel implements ActionListener
 	JTable chTable = new JTable();	//Label
 	//JLabel
 	JLabel labelMontantTot = new JLabel("Montant total :");
-	JLabel labelMontantVal = new JLabel("0 €");
+	JLabel labelMontantVal = new JLabel("0");
 	JLabel labelLogin = new JLabel ("Login     :");
 	JLabel labelMDP = new JLabel ("Mdp        :");
 	JLabel labelCB = new JLabel ("Carte Bleu :");
 	JLabel labelSolde = new JLabel("Votre solde :");
-	JLabel labelSoldeMontant = new JLabel("0 €");
+	JLabel labelSoldeMontant = new JLabel("0");
 	//ComboBox
 	JComboBox comboArticle;
 	//TextField
@@ -49,7 +49,7 @@ public class PanelFils extends JPanel implements ActionListener
 	JButton boutonAdd = new JButton("Add");
 	JButton boutonRem = new JButton("Del");
 	JButton boutonCo = new JButton("  Connexion  ");
-	JButton boutonDeco = new JButton("Deconnexion");
+	JButton boutonDeco = new JButton("Déconnexion");
 	JButton boutonPayer = new JButton("  Payez !  ");
 	//SQL
 	SQL serveurLocal;
@@ -60,14 +60,12 @@ public class PanelFils extends JPanel implements ActionListener
 	//Bool
 	boolean chCo = false;
 	//int
-	int index = 0;
 	int idPanierCo =0;
 	//Panier
 	Panier panier = new Panier(titre,idPanierCo);
 	public PanelFils(SQL parServeur) throws SQLException{
 		
 		serveurLocal = parServeur;
-		//chTable.setModel(new TableDuMois(agenda,indexEvt));
 		
 		chTable.setModel(panier);
 		
@@ -96,15 +94,12 @@ public class PanelFils extends JPanel implements ActionListener
 		cont.gridy=0;
 		cont.gridx=6;
 		cont.fill = GridBagConstraints.VERTICAL;
-
 		cont.gridx=6;
 		cont.fill = GridBagConstraints.BOTH;
 		comboArticle = new JComboBox(listProduit);
 		add(comboArticle,cont);
-		
 		cont.fill = GridBagConstraints.VERTICAL;
 		cont.gridx=8;
-;
 		cont.fill = GridBagConstraints.BOTH;
 		cont.gridy=1;
 		add(boutonRem,cont);
@@ -166,25 +161,26 @@ public class PanelFils extends JPanel implements ActionListener
 
 				
 					try {
-						if (serveurLocal.connection(log,mdp)){
+						if (serveurLocal.connection(log,mdp)&&chCo == false){
+							
 							 boutonCo.setBackground(new Color(0,255,255));
 							 fieldLogin.setEditable(false);
 							 fieldMDP.setEditable(false);
 							 chCo= true;
 							 chLog = log;
 							 chMdp = mdp;
-							 fieldHisto.append("Connection validée \n");
-							 fieldHisto.append("Chargment du pannier \n");
+							 fieldHisto.append("Connexion validée \n");
+							 fieldHisto.append("Chargement du panier \n");
 							 idPanierCo = serveurLocal.idPanier(log,mdp);
 							 chTable.setModel(new Panier(titre, idPanierCo));
-							 // TODO afficher le panier
+							 labelSoldeMontant.setText("" + serveurLocal.getSolde(idPanierCo));
+							 labelMontantVal.setText(""+serveurLocal.montantTotal(idPanierCo));
 						 }
 						 else
 						 {
-							 fieldHisto.append("Connection refusée \n");
+							 fieldHisto.append("Connexion refusée \n");
 						 }
 					} catch (SQLException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				
@@ -194,14 +190,19 @@ public class PanelFils extends JPanel implements ActionListener
 		{
 			String codeCB = fieldCB.getText();
 			try {
-				if (serveurLocal.verifCB(codeCB, chLog))
+				if (serveurLocal.verifCB(codeCB, chLog) && serveurLocal.fondDispo(chLog,Integer.parseInt(labelMontantVal.getText())))
 				{
-					fieldHisto.append("Payement Validé \n");
+						serveurLocal.paiement(chLog,Integer.parseInt(labelSoldeMontant.getText()),Integer.parseInt(labelMontantVal.getText()));
+						labelSoldeMontant.setText(""+serveurLocal.getSolde(idPanierCo));
+						fieldHisto.append("Paiement Validé \n");
+						serveurLocal.remove(idPanierCo);
+						chTable.setModel(new Panier(titre, idPanierCo));
+						labelMontantVal.setText("0");	
 					
 					
 				}
 				else
-					fieldHisto.append("Code carte bancaire erroné\n");
+					fieldHisto.append("Code carte bancaire erroné\n ou fond insuffisant \n");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -210,15 +211,46 @@ public class PanelFils extends JPanel implements ActionListener
 		
 		if (parEvt.getSource()== boutonAdd && chCo == true){
 			try {
-				serveurLocal.ajoutPanier(comboArticle.getSelectedItem().toString(),Integer.valueOf(fieldQte.getText()),idPanierCo);
+				int chQte = Integer.parseInt(fieldQte.getText());
+				serveurLocal.ajoutPanier(comboArticle.getSelectedItem().toString(),chQte,idPanierCo);
 				chTable.setModel(new Panier(titre, idPanierCo));
-				//panier.setModele(idPanierCo,titre);
+				 labelMontantVal.setText(""+serveurLocal.montantTotal(idPanierCo));
 			} catch (NumberFormatException e) {
-				e.printStackTrace();
+				fieldHisto.append("Entrez un chiffre svp\n");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
 		}
-		
+		if (parEvt.getSource() == boutonRem&& chCo ==true){
+			try {
+				serveurLocal.remove(idPanierCo);
+				chTable.setModel(new Panier(titre, idPanierCo));
+				labelMontantVal.setText("0");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		if(parEvt.getSource()== boutonDeco &&chCo == true){
+			chCo=false;
+			boutonCo.setBackground(null);
+			chLog=null;
+			chMdp=null;
+			idPanierCo=0;
+			fieldHisto.setText(null);
+			fieldLogin.setEditable(true);
+			fieldLogin.setText(null);
+			fieldMDP.setEditable(true);
+			fieldMDP.setText(null);
+			fieldCB.setText(null);
+			fieldHisto.append("Vous êtes déconnecté \n");
+			labelMontantVal.setText("0");
+			labelSoldeMontant.setText("0");
+			try {
+				chTable.setModel(new Panier(titre, idPanierCo));
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	} //actionPerformed 
 }

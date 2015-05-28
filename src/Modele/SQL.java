@@ -59,7 +59,7 @@ public class SQL {
 		}
 		return listProduit;
 	}
-	public void ajoutPanier(String parNomProd,Integer chQte, int paridPanierCo) throws SQLException{
+	public void ajoutPanier(String parNomProd,int chQte, int paridPanierCo) throws SQLException{
 		int Prix;
 		int idProduitR;
 		Statement stmt = connLocal.createStatement ();
@@ -67,7 +67,7 @@ public class SQL {
 		rset.next();Prix = rset.getInt(1);
 		ResultSet rset3 = stmt.executeQuery ("select IDARTICLE from BDARTICLE where NOMARTICLE = '" +parNomProd+"'");
 		rset3.next();idProduitR = rset3.getInt(1);
-		ResultSet rset2 = stmt.executeQuery ("insert into BDPANIER values("+paridPanierCo+","+idProduitR+","+chQte+"," + (Prix*chQte.intValue())+")" );
+		ResultSet rset2 = stmt.executeQuery ("insert into BDPANIER values("+paridPanierCo+","+idProduitR+","+chQte+"," + (Prix*chQte)+")" );
 	}
 
 	public int idPanier(String chLog, String chmdp) {
@@ -82,7 +82,42 @@ public class SQL {
 		}
 		return 0;	
 	}
-	 
+	public int getSolde(int chidPanier) throws SQLException{
+		Statement stmt = connLocal.createStatement ();
+		ResultSet rset = stmt.executeQuery ("select SOLDE from BDUSER where IDPANIER ='"+chidPanier+"'");
+		rset.next();
+		return(rset.getInt(1));	
+		
+		
+	}
+
+	public void remove(int idPanierCo) throws SQLException {
+		Statement stmt = connLocal.createStatement ();
+		ResultSet rset = stmt.executeQuery ("DELETE from BDPANIER where IDPANIER ='"+idPanierCo+"'");
+	}
+	public int montantTotal(int idPanierCo) throws SQLException {
+		Statement stmt = connLocal.createStatement ();
+		ResultSet rset = stmt.executeQuery ("select sum(SUMARTICLE) from BDPANIER where IDPANIER ='"+idPanierCo+"' group by IDPANIER");
+		if (rset.next()){
+			return(rset.getInt(1));
+		}
+		return 0;
+	}
+
+	public boolean fondDispo(String chLog, int MontantTot) throws SQLException {
+		Statement stmt = connLocal.createStatement ();
+		ResultSet rset = stmt.executeQuery ("select SOLDE from BDUSER where LOGIN='"+chLog+"'");
+		rset.next();
+		if (rset.getInt(1)>= MontantTot){
+			return true;
+		}
+		return false;
+	}
+
+	public void paiement(String chLog, int MontantaPayer, int Solde) throws SQLException {
+		Statement stmt = connLocal.createStatement ();
+		ResultSet rset = stmt.executeQuery ("UPDATE BDUSER set SOLDE ='"+  (MontantaPayer-Solde)+"' where LOGIN ='"+chLog+"'");
+	}
 
 	    
 
