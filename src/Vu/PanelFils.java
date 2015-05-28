@@ -26,7 +26,6 @@ public class PanelFils extends JPanel implements ActionListener
 	//-----------------
 	//Tableaux (valeurs pour table)
 	String[] titre = {"NomProd","Qte","PrixU","PrixTot"}; //Valeurs du tableau
-	//Object[][] exemple = {{"Chèvre","4000","1","4000"}}; //Exemple de valeur
 	//Table
 	JTable chTable = new JTable();	//Label
 	//JLabel
