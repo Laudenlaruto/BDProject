@@ -190,19 +190,21 @@ public class PanelFils extends JPanel implements ActionListener
 		{
 			String codeCB = fieldCB.getText();
 			try {
-				if (serveurLocal.verifCB(codeCB, chLog) && serveurLocal.fondDispo(chLog,Integer.parseInt(labelMontantVal.getText())))
+				if (serveurLocal.verifCB(codeCB, chLog))
 				{
+					if (serveurLocal.fondDispo(chLog,Integer.parseInt(labelMontantVal.getText()))){
 						serveurLocal.paiement(chLog,Integer.parseInt(labelSoldeMontant.getText()),Integer.parseInt(labelMontantVal.getText()));
 						labelSoldeMontant.setText(""+serveurLocal.getSolde(idPanierCo));
 						fieldHisto.append("Paiement Validé \n");
 						serveurLocal.remove(idPanierCo);
 						chTable.setModel(new Panier(titre, idPanierCo));
 						labelMontantVal.setText("0");	
-					
-					
+					}
+					else
+						fieldHisto.append("Fond insuffisant \n");
 				}
 				else
-					fieldHisto.append("Code carte bancaire erroné\n ou fond insuffisant \n");
+					fieldHisto.append("Code carte bancaire erroné\n");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
