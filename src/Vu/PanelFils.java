@@ -66,9 +66,7 @@ public class PanelFils extends JPanel implements ActionListener
 	public PanelFils(SQL parServeur) throws SQLException{
 		
 		serveurLocal = parServeur;
-		
 		chTable.setModel(panier);
-		
 		listProduit = serveurLocal.addproduit();
 		//GridBagLayout
 		this.setLayout(new GridBagLayout());
@@ -134,7 +132,6 @@ public class PanelFils extends JPanel implements ActionListener
 		cont.gridwidth=5;
 		cont.gridx=0;
 		cont.gridy=3;
-		
 		add(new JScrollPane(chTable),cont);
 		cont.gridx=5;
 		cont.gridy=2;
@@ -147,7 +144,7 @@ public class PanelFils extends JPanel implements ActionListener
 		add(labelMontantTot,cont);
 		cont.gridx=4;
 		add(labelMontantVal,cont);
-		
+		setBackground(new Color(0,255,255));
 		
 		
 	} //PanelFils()
