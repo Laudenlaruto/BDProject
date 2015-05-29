@@ -77,7 +77,6 @@ public class SQL {
 			rset.next();
 			return rset.getInt(1);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 0;	

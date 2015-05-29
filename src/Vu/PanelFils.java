@@ -250,7 +250,6 @@ public class PanelFils extends JPanel implements ActionListener
 			try {
 				chTable.setModel(new Panier(titre, idPanierCo));
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

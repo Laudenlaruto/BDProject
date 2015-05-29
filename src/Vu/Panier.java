@@ -21,8 +21,9 @@ public static Connection connLocal;
 	    connLocal = conn;
 	    Statement stmt = connLocal.createStatement ();
 	    setColumnCount(4);
-		setRowCount(100);
+		
 	    if (idPanierCo !=0){
+	    setRowCount(100);
 		ResultSet rset = stmt.executeQuery ("select NOMARTICLE,QTE,SUMARTICLE,PRIXU from BDPANIER,BDARTICLE where BDPANIER.IDARTICLE = BDARTICLE.IDARTICLE and IDPANIER ='"+idPanierCo+"'" );
 		int Ligne =0;
 		while (rset.next()){
